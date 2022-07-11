@@ -5,13 +5,7 @@
 
 #include "settings.h"
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#include <GLUT/freeglut.h>
-#else
-#include <GL/glut.h>
-#include <GL/freeglut.h>
-#endif
+#include "glut.h"
 
 #include "snowman.h"
 
