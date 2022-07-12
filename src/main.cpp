@@ -17,7 +17,7 @@ GLfloat blue = 1;
 
 GLfloat aspectRatio;
 
-CameraMouseData cam(3.0);
+CameraMouseData *cam;
 
 void renderScene() {
 
@@ -32,7 +32,7 @@ void renderScene() {
   glRotated(180, 1, 0, 0);
   {
     GLdouble camMatrix[16];
-    cam.m_camera_transform.inverse().getOpenGLMatrix(camMatrix);
+    cam->m_camera_transform.inverse().getOpenGLMatrix(camMatrix);
     glMultMatrixd(camMatrix);
     // std::cout << "Cam Matrix is" << std::endl;
     // std::cout << std::fixed << std::setprecision(2);
@@ -74,7 +74,7 @@ void renderScene() {
   glEnd();
 
   // Draw ground
-  glColor3f(0.9f, 0.9f, 0.9f);
+  glColor3f(1-red,1-green,1-blue);
   glBegin(GL_QUADS);
   glVertex3f(-100.0f, -100.0f, 0.0f);
   glVertex3f(-100.0f,  100.0f, 0.0f);
@@ -119,14 +119,15 @@ void processSpecialKeys(int key, int x, int y) {
     blue = blue < 0.5 ? 1.0 : 0.0;
     break;
   }
+  glutPostRedisplay();
 }
 
 void mouseCallback(int button, int state, int x, int y) {
-  cam.startMouseMove(button, state, x, y);
+  cam->startMouseMove(button, state, x, y);
 }
 
 void moveCallback(int x, int y) {
-  cam.updateMouseMove(x, y);
+  cam->updateMouseMove(x, y);
 }
 
 int main(int argc, char **argv) {
@@ -137,8 +138,10 @@ int main(int argc, char **argv) {
   glutInitWindowSize(320,320);
   aspectRatio = 1.0;
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-  window_id = glutCreateWindow("Lighthouse3D- GLUT Tutorial");
-
+  Window window("Lighthouse3D- GLUT Tutorial");
+  window_id = window.m_window_id;//glutCreateWindow("Lighthouse3D- GLUT Tutorial");
+  CameraMouseData local_cam(30.0, window);
+  cam = &local_cam;
   // register callbacks
   glutDisplayFunc(renderScene);
   glutReshapeFunc(changeSize);

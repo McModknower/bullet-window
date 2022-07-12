@@ -5,11 +5,13 @@
 
 #include "glut.h"
 
-CameraMouseData::CameraMouseData(btScalar distance) :
+CameraMouseData::CameraMouseData(btScalar distance, Window &window) :
   m_motion_mode(MOTION_MODE_NOTHING),
   m_camera_center_distance(distance),
-  m_camera_transform(btQuaternion(0, 0, 0, 1))
+  m_camera_transform(btQuaternion(0, 0, 0, 1)),
+  m_window(window)
 {
+  
 }
 
 void CameraMouseData::startMouseMove(int button, int state, int x, int y) {
@@ -41,7 +43,7 @@ void CameraMouseData::startMouseMove(int button, int state, int x, int y) {
       }
     }
   }
-  glutPostRedisplay();
+  m_window.postRedisplay();
 }
 
 void CameraMouseData::updateMouseMove(int x, int y)
@@ -50,8 +52,8 @@ void CameraMouseData::updateMouseMove(int x, int y)
     return;
   }
   // TODO use width and height instead of 100
-  btScalar dx = (x - m_lx) / 100.0;
-  btScalar dy = (y - m_ly) / 100.0;
+  btScalar dx = (x - m_lx) / (btScalar) m_window.m_width;
+  btScalar dy = (y - m_ly) / (btScalar) m_window.m_height;
   btVector3 camera_center(m_camera_center_distance, 0, 0);
   camera_center = m_camera_transform(camera_center);
   m_lx = x;
@@ -59,14 +61,13 @@ void CameraMouseData::updateMouseMove(int x, int y)
 
   if(m_motion_mode == MOTION_MODE_ROTATE) {
     btVector3 y_axis(0, 1, 0);
-    y_axis = m_camera_transform(y_axis);
-    btVector3 camera_center(m_camera_center_distance, 0, 0);
-    camera_center = m_camera_transform(camera_center);
+    btQuaternion cameraRotation = m_camera_transform.getRotation();
+    y_axis = quatRotate(cameraRotation, y_axis);
     
     btTransform a(btQuaternion(0, 0, 0, 1), camera_center);
 
     m_camera_transform *= a.inverse();
-    m_camera_transform *= btTransform(btQuaternion(y_axis, dx*M_PI));
+    m_camera_transform *= btTransform(btQuaternion(y_axis, dy*M_PI));
     m_camera_transform *= btTransform(btQuaternion(btVector3(0, 0, 1), dx*M_PI));
     m_camera_transform *= a;
     
@@ -78,5 +79,5 @@ void CameraMouseData::updateMouseMove(int x, int y)
     result.mult(m_camera_transform, other);
     m_camera_transform = result;
   }
-  glutPostRedisplay();
+  m_window.postRedisplay();
 }
