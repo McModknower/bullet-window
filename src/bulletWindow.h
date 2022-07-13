@@ -14,11 +14,13 @@ class BulletWindow : public Window
   GLfloat m_green = 1;
   GLfloat m_blue = 1;
 
- public:
-  CameraMouseData m_cam;
-  
   BulletWindow(const char* title, btScalar distance);
 
+ public:
+  CameraMouseData m_cam;
+
+  static BulletWindow create(const char* title);
+  
   void displayCallback() override;
   void reshapeCallback(int width, int height) override;
   void keyboardCallback(unsigned char key, int x, int y) override;

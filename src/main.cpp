@@ -12,14 +12,9 @@
 int main(int argc, char **argv) {
   // init GLUT and create Window
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowPosition(100,100);
   glutInitWindowSize(320,320);
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-  BulletWindow window("Lighthouse3D- GLUT Tutorial", 3.0);
-  // register callbacks
- 
-  glEnable(GL_DEPTH_TEST);
+  BulletWindow window = BulletWindow::create("Lighthouse3D- GLUT Tutorial");
   
   // enter GLUT event processing cycle
   glutMainLoop();
