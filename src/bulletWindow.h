@@ -6,20 +6,25 @@
 
 #include "camera.h"
 
-class BulletWindow : Window
+class BulletWindow : public Window
 {
  private:
-  GLfloat aspectRatio;
-  GLfloat red = 1;
-  GLfloat green = 1;
-  GLfloat blue = 1;
+  GLfloat m_aspectRatio;
+  GLfloat m_red = 1;
+  GLfloat m_green = 1;
+  GLfloat m_blue = 1;
 
  public:
   CameraMouseData m_cam;
   
   BulletWindow(const char* title, btScalar distance);
 
-  void displayCallback();
+  void displayCallback() override;
+  void reshapeCallback(int width, int height) override;
+  void keyboardCallback(unsigned char key, int x, int y) override;
+  void specialKeyCallback(int key, int x, int y) override;
+  void mouseCallback(int button, int state, int x, int y) override;
+  void motionCallback(int x, int y) override;
 };
 
 #endif
