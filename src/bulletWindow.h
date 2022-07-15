@@ -10,6 +10,9 @@ class BulletWindow : public Window
 {
  private:
   GLfloat m_aspectRatio;
+
+  btVector3 m_light_position;
+
   GLfloat m_red = 1;
   GLfloat m_green = 1;
   GLfloat m_blue = 1;

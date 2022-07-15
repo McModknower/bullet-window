@@ -10,15 +10,31 @@ BulletWindow BulletWindow::create(const char* title) {
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   BulletWindow window(title, 3.0);
+  // (gl:enable :light0 :lighting :color-material :blend)
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glEnable(GL_RESCALE_NORMAL);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_BLEND);
+  // (gl:cull-face :back)
+  glCullFace(GL_BACK);
+  // (gl:depth-func :lequal)
+  glDepthFunc(GL_LEQUAL);
+  // (gl:shade-model :smooth)
+  glShadeModel(GL_SMOOTH);
+  // (gl:blend-func :src-alpha :one-minus-src-alpha)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // (gl:hint :perspective-correction-hint :nicest)))
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
   return window;
 }
 
 BulletWindow::BulletWindow(const char* title, btScalar distance) :
   Window(title),
-  m_cam(distance,*this)
+  m_cam(distance,*this),
+  m_light_position(0, 0, 5)
 {
   m_aspectRatio = m_width / (GLfloat) m_height;
 }
@@ -86,6 +102,29 @@ void BulletWindow::displayCallback() {
     glMultMatrixd(camMatrix);
   }
 
+  {
+    // (gl:light :light0 :position (vector
+    //                                (cl-transforms:x (light-position window))
+    //                                (cl-transforms:y (light-position window))
+    //                                (cl-transforms:z (light-position window))
+    //                                0))
+    GLfloat pos[4];
+    pos[0] = m_light_position.getX();
+    pos[1] = m_light_position.getY();
+    pos[2] = m_light_position.getZ();
+    pos[3] = 0;
+    glLightfv(GL_LIGHT0, GL_POSITION, pos);
+  }{
+    //   (gl:light-model :light-model-ambient #(0.5 0.5 0.5 1.0))
+    GLfloat data[] = {0.5, 0.5, 0.5, 1};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, data);
+  }{
+    //   (gl:light :light0 :diffuse #(0.8 0.8 0.8 1))
+    GLfloat data[] = {0.8, 0.8, 0.8, 1};
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, data);
+    //   (gl:light :light0 :specular #(0.8 0.8 0.8 1))
+    glLightfv(GL_LIGHT0, GL_SPECULAR, data);
+  }
   glColor3f(m_red,m_green,m_blue);
   glBegin(GL_TRIANGLES);
   glVertex3f(-2.0f,-2.0f, 0.0f);
@@ -140,7 +179,7 @@ void BulletWindow::displayCallback() {
 
   // WARNING: THIS FUNCTION CHANGES THE ORIGIN
   // WHEN USING IT FOR TESTING, MAKE SURE IT IS THE LAST THING DRAWN
-  // drawSnowMan();
+  drawSnowMan();
 
   glFlush();
   
