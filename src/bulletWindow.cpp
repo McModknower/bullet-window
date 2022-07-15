@@ -102,6 +102,7 @@ void BulletWindow::displayCallback() {
     glMultMatrixd(camMatrix);
   }
 
+  // Setup the light
   {
     // (gl:light :light0 :position (vector
     //                                (cl-transforms:x (light-position window))
@@ -125,6 +126,9 @@ void BulletWindow::displayCallback() {
     //   (gl:light :light0 :specular #(0.8 0.8 0.8 1))
     glLightfv(GL_LIGHT0, GL_SPECULAR, data);
   }
+
+
+  // some objects for testing
   glColor3f(m_red,m_green,m_blue);
   glBegin(GL_TRIANGLES);
   glVertex3f(-2.0f,-2.0f, 0.0f);
