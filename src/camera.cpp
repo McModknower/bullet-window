@@ -19,17 +19,14 @@ void CameraMouseData::startMouseMove(int button, int state, int x, int y) {
     m_motion_mode = MOTION_MODE_NOTHING;
   } else {
     btTransform other(btQuaternion(0, 0, 0, 1));
-    btTransform result(btQuaternion(0, 0, 0, 1));
     switch(button) {
     case 3: // WHEEL_UP
       other.setOrigin(btVector3(0.10*m_camera_center_distance, 0.0, 0.0));
-      result.mult(m_camera_transform, other);
-      m_camera_transform = result;
+      m_camera_transform *= other;
       break;
     case 4: // WHEEL_DOWN
       other.setOrigin(btVector3((-0.10)*m_camera_center_distance, 0.0, 0.0));
-      result.mult(m_camera_transform, other);
-      m_camera_transform = result;
+      m_camera_transform *= other;
       break;
     }
     if(m_motion_mode == MOTION_MODE_NOTHING) {

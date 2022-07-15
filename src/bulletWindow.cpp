@@ -11,6 +11,8 @@ BulletWindow BulletWindow::create(const char* title) {
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   BulletWindow window(title, 3.0);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_RESCALE_NORMAL);
   return window;
 }
 
@@ -75,15 +77,15 @@ void BulletWindow::displayCallback() {
   glRotated(-90, 0, 0, 1);
   glRotated(180, 1, 0, 0);
 
+  // Clear Color and Depth Buffers
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   { // Rotate to the perspective defined by the camera
     GLdouble camMatrix[16];
     m_cam.m_camera_transform.inverse().getOpenGLMatrix(camMatrix);
     glMultMatrixd(camMatrix);
   }
 
-  // Clear Color and Depth Buffers
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
   glColor3f(m_red,m_green,m_blue);
   glBegin(GL_TRIANGLES);
   glVertex3f(-2.0f,-2.0f, 0.0f);
@@ -121,20 +123,24 @@ void BulletWindow::displayCallback() {
   glVertex3f( 100.0f, -100.0f, 0.0f);
   glEnd();
 
-  drawSnowMan();
-
-  // When we are moving around, draw a little yellow disk similar to
-  // that one RVIZ draws.
-  glPushMatrix();
-  {
+  if(m_cam.m_motion_mode != MOTION_MODE_NOTHING) {
+    // When we are moving around, draw a little yellow disk similar to
+    // that one RVIZ draws.
     btVector3 disk_pos(m_cam.m_camera_center_distance, 0, 0);
     disk_pos = m_cam.m_camera_transform(disk_pos);
-    glTranslated(disk_pos.getX() ,disk_pos.getY() , disk_pos.getZ());
-    glColor3f(0.8f, 0.8f, 0.0f);
-    glScalef(1.0f, 1.0f, 0.1f);
-    glutSolidSphere(0.1, 50, 50);
+    glPushMatrix();
+    {
+      glTranslated(disk_pos.getX() ,disk_pos.getY() , disk_pos.getZ());
+      glColor3f(0.8f, 0.8f, 0.0f);
+      glScalef(1.0f, 1.0f, 0.1f);
+      glutSolidSphere(0.1, 50, 50);
+    }
+    glPopMatrix();
   }
-  glPopMatrix();
+
+  // WARNING: THIS FUNCTION CHANGES THE ORIGIN
+  // WHEN USING IT FOR TESTING, MAKE SURE IT IS THE LAST THING DRAWN
+  // drawSnowMan();
 
   glFlush();
   
