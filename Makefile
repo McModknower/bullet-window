@@ -6,9 +6,9 @@ SRC_DIR := ./src
 
 CPP := g++
 
-LDFLAGS += -lGL -lGLU -lglut
+LDFLAGS += -lGL -lGLU -lglut -pthread $(shell pkg-config --libs bullet)
 
-CXXFLAGS += -ggdb
+CXXFLAGS += -ggdb $(shell pkg-config --cflags bullet)
 
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.

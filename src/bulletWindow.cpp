@@ -4,12 +4,12 @@
 
 #include "bulletWindow.h"
 #include "snowman.h"
+// for debugging
 #include <iostream>
 
-BulletWindow BulletWindow::create(const char* title) {
+BulletWindow BulletWindow::create(const char* title, const btCollisionWorld *world) {
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-  BulletWindow window(title, 3.0);
+  BulletWindow window(title, 3.0, world);
   // (gl:enable :light0 :lighting :color-material :blend)
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
@@ -31,12 +31,18 @@ BulletWindow BulletWindow::create(const char* title) {
   return window;
 }
 
-BulletWindow::BulletWindow(const char* title, btScalar distance) :
+BulletWindow::BulletWindow(const char* title, btScalar distance, const btCollisionWorld *world) :
   Window(title),
   m_cam(distance,*this),
-  m_light_position(0, 0, 5)
+  m_light_position(0, 0, 5),
+  m_world(world)
 {
   m_aspectRatio = m_width / (GLfloat) m_height;
+}
+
+void BulletWindow::tick() {
+  ticks++;
+  postRedisplay();
 }
 
 void BulletWindow::reshapeCallback(int w, int h) {
@@ -148,7 +154,7 @@ void BulletWindow::displayCallback() {
   glVertex3f(1.0f,-1.0f,-1.0f);
   glVertex3f(1.0f,-1.0f, 1.0f);
   glVertex3f(1.0f, 1.0f, 1.0f);
-  glVertex3f(1.0f, 2.0f,-1.0f);
+  glVertex3f(1.0f, ticks % 10,-1.0f);
   glEnd();
 
   glColor3f(1-m_red,1-m_green,m_blue);
@@ -165,6 +171,8 @@ void BulletWindow::displayCallback() {
   glVertex3f( 100.0f,  100.0f, 0.0f);
   glVertex3f( 100.0f, -100.0f, 0.0f);
   glEnd();
+
+  glutSolidTeapot(1);
 
   if(m_cam.m_motion_mode != MOTION_MODE_NOTHING) {
     // When we are moving around, draw a little yellow disk similar to
@@ -183,7 +191,7 @@ void BulletWindow::displayCallback() {
 
   // WARNING: THIS FUNCTION CHANGES THE ORIGIN
   // WHEN USING IT FOR TESTING, MAKE SURE IT IS THE LAST THING DRAWN
-  drawSnowMan();
+  //  drawSnowMan();
 
   glFlush();
   

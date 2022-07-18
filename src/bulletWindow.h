@@ -6,6 +6,8 @@
 
 #include "camera.h"
 
+#include <bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h>
+
 class BulletWindow : public Window
 {
  private:
@@ -17,12 +19,16 @@ class BulletWindow : public Window
   GLfloat m_green = 1;
   GLfloat m_blue = 1;
 
-  BulletWindow(const char* title, btScalar distance);
+  int ticks = 0;
+  
+  const btCollisionWorld *m_world;
+
+  BulletWindow(const char* title, btScalar distance, const btCollisionWorld *world);
 
  public:
   CameraMouseData m_cam;
 
-  static BulletWindow create(const char* title);
+  static BulletWindow create(const char* title, const btCollisionWorld *world);
   
   void displayCallback() override;
   void reshapeCallback(int width, int height) override;
@@ -30,6 +36,7 @@ class BulletWindow : public Window
   void specialKeyCallback(int key, int x, int y) override;
   void mouseCallback(int button, int state, int x, int y) override;
   void motionCallback(int x, int y) override;
+  void tick() override;
 };
 
 #endif

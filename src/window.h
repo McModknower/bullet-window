@@ -10,6 +10,10 @@ private:
   static void staticSpecialKeyCallback(int key, int x, int y);
   static void staticMouseCallback(int button, int state, int x, int y);
   static void staticMotionCallback(int x, int y);
+  static void staticTick(int windowID);
+  // at what millis the next tick should be done.
+  unsigned int m_next_tick_at;
+  int m_tick_delay;
 public:
   int m_window_id;
   int m_height;
@@ -23,8 +27,17 @@ public:
   virtual void specialKeyCallback(int key, int x, int y) {}
   virtual void mouseCallback(int button, int state, int x, int y) {}
   virtual void motionCallback(int x, int y) {}
+  virtual void tick() {}
 
   void postRedisplay();
+  /**
+   * Enables ticking and starts the timer.
+   */
+  void enableTick(unsigned int tick_ms);
+  /**
+   * Disables ticking. Internally sets the tick delay to -1.
+   */
+  void disableTick();
   void close();
 
   virtual ~Window();
