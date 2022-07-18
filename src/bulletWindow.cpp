@@ -3,7 +3,6 @@
 #include "glut.h"
 
 #include "bulletWindow.h"
-#include "snowman.h"
 // for debugging
 #include <iostream>
 
@@ -188,11 +187,7 @@ void BulletWindow::displayCallback() {
     }
     glPopMatrix();
   }
-
-  // WARNING: THIS FUNCTION CHANGES THE ORIGIN
-  // WHEN USING IT FOR TESTING, MAKE SURE IT IS THE LAST THING DRAWN
-  //  drawSnowMan();
-
+  
   glFlush();
   
   glutSwapBuffers();
