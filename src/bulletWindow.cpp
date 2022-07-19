@@ -3,6 +3,8 @@
 #include "glut.h"
 
 #include "bulletWindow.h"
+#include "bulletRenderer.h"
+
 // for debugging
 #include <iostream>
 
@@ -102,9 +104,9 @@ void BulletWindow::displayCallback() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   { // Rotate to the perspective defined by the camera
-    GLdouble camMatrix[16];
+    btScalar camMatrix[16];
     m_cam.m_camera_transform.inverse().getOpenGLMatrix(camMatrix);
-    glMultMatrixd(camMatrix);
+    glMultMatrixf(camMatrix);
   }
 
   // Setup the light
@@ -162,16 +164,18 @@ void BulletWindow::displayCallback() {
   glVertex3f(0.0f,0.1f,0.0f);
   glEnd();
 
-  // Draw ground
-  glColor3f(0.9f, 0.9f, 0.9f);
-  glBegin(GL_QUADS);
-  glVertex3f(-100.0f, -100.0f, 0.0f);
-  glVertex3f(-100.0f,  100.0f, 0.0f);
-  glVertex3f( 100.0f,  100.0f, 0.0f);
-  glVertex3f( 100.0f, -100.0f, 0.0f);
-  glEnd();
+  // // Draw ground
+  // glColor3f(0.9f, 0.9f, 0.9f);
+  // glBegin(GL_QUADS);
+  // glVertex3f(-100.0f, -100.0f, 0.0f);
+  // glVertex3f(-100.0f,  100.0f, 0.0f);
+  // glVertex3f( 100.0f,  100.0f, 0.0f);
+  // glVertex3f( 100.0f, -100.0f, 0.0f);
+  // glEnd();
 
-  glutSolidTeapot(1);
+  render(m_world->getCollisionObjectArray());
+  
+  //glutSolidTeapot(1);
 
   if(m_cam.m_motion_mode != MOTION_MODE_NOTHING) {
     // When we are moving around, draw a little yellow disk similar to

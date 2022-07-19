@@ -1,8 +1,8 @@
 To do list
 
-- [ ] Render plains in bullet world 
-- [ ] Render boxes in bullet world
+- [x] Render boxes in bullet world
 - [ ] Render spheres in bullet world
 - [ ] step the bullet world each tick
+- [ ] Fix Rotating the camera
 - [ ] add a bulletSpeedMuliplier that makes the bullet world advance bulletSpeedMuliplier seconds for each real second
 - [ ] Render all other shapes in bullet world
