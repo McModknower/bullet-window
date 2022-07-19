@@ -2,4 +2,8 @@
 /build/
 *.log
 *.zip
+*.tar.gz
 
+# emacs temp files
+.#*
+\#

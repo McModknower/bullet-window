@@ -46,3 +46,11 @@ clean:
 # Makefiles. Initially, all the .d files will be missing, and we don't want those
 # errors to show up.
 -include $(DEPS)
+
+
+# Script for easy packaging of the source
+.PHONY: tar
+tar: window.tar.gz
+
+window.tar.gz: $(shell git ls-files)
+	tar -czf window.tar.gz $(shell git ls-files)
