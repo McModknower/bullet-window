@@ -5,6 +5,7 @@
 
 // all the individual shapes
 #include <bullet/BulletCollision/CollisionShapes/btBoxShape.h>
+#include <bullet/BulletCollision/CollisionShapes/btSphereShape.h>
 
 #include "glut.h"
 
@@ -35,11 +36,19 @@ void renderBox(const btBoxShape &shape) {
   glPopMatrix();
 }
 
+void renderSphere(const btSphereShape &shape) {
+  btScalar radius = shape.getRadius();
+  // use 50 divisions, just like cram
+  glutSolidSphere(radius, 50, 50);
+}
+
 void render(const btCollisionShape *shape) {
   switch(shape->getShapeType()) {
   case BOX_SHAPE_PROXYTYPE:
     renderBox(dynamic_cast<const btBoxShape&>(*shape));
     break;
+  case SPHERE_SHAPE_PROXYTYPE:
+    renderSphere(dynamic_cast<const btSphereShape&>(*shape));
   default:
     break;
   }
