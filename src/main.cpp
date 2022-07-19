@@ -12,6 +12,17 @@
 
 #include <bullet/btBulletDynamicsCommon.h>
 
+void threaded(btDiscreteDynamicsWorld *dynamicsWorld) {
+  glutInitWindowPosition(100,100);
+  glutInitWindowSize(320,320);
+  BulletWindow window = BulletWindow::create("Bullet Visualization", dynamicsWorld);
+  window.enableTick(500);
+  // enter GLUT event processing cycle
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+
+  glutMainLoop();
+}
+
 int main(int argc, char **argv) {
     //copied code from bullet example hello world
     int i;
@@ -102,54 +113,44 @@ int main(int argc, char **argv) {
 
   // init GLUT and create Window
   glutInit(&argc, argv);
-  glutInitWindowPosition(100,100);
-  glutInitWindowSize(320,320);
-  BulletWindow window = BulletWindow::create("Bullet VIsualization", dynamicsWorld);
-  window.enableTick(500);
-  // enter GLUT event processing cycle
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-  
-  
-  std::thread loopThread(glutMainLoop);
 
-  loopThread.join();
-  return EXIT_SUCCESS;
-  
-  //Any code behind the glutMainLoop only gets reached once all windows are closed
 
-    ///-----stepsimulation_start-----
-    for (i = 0; i < 150; i++)
-      {
-        dynamicsWorld->stepSimulation(1.f / 60.f, 10);
-  
-        //print positions of all objects
-        for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
-  	{
-  	  btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
-  	  btRigidBody* body = btRigidBody::upcast(obj);
-  	  btTransform trans;
-  	  if (body && body->getMotionState())
-  	    {
-  	      body->getMotionState()->getWorldTransform(trans);
-  	    }
-  	  else
-  	    {
-  	      trans = obj->getWorldTransform();
-  	    }
-  	  printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  	}
-	window.postRedisplay();
-      }
-  
-    ///-----stepsimulation_end-----
+  std::thread loopThread(threaded, dynamicsWorld);
 
-  window.close();
+  // keeping this code so it will be easier for me to test ticking the bullet world.
+  //   ///-----stepsimulation_start-----
+  //   for (i = 0; i < 150; i++)
+  //     {
+  //       dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+
+  //       //print positions of all objects
+  //       for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+  // 	{
+  // 	  btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
+  // 	  btRigidBody* body = btRigidBody::upcast(obj);
+  // 	  btTransform trans;
+  // 	  if (body && body->getMotionState())
+  // 	    {
+  // 	      body->getMotionState()->getWorldTransform(trans);
+  // 	    }
+  // 	  else
+  // 	    {
+  // 	      trans = obj->getWorldTransform();
+  // 	    }
+  // 	  printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+  // 	}
+  // 	window.postRedisplay();
+  //     }
+
+  //   ///-----stepsimulation_end-----
+
+  // window.close();
   loopThread.join();
 
     //cleanup in the reverse order of creation/initialization
-  
+
     ///-----cleanup_start-----
-  
+
     //remove the rigidbodies from the dynamics world and delete them
     for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
       {
@@ -162,7 +163,7 @@ int main(int argc, char **argv) {
         dynamicsWorld->removeCollisionObject(obj);
         delete obj;
       }
-  
+
     //delete collision shapes
     for (int j = 0; j < collisionShapes.size(); j++)
       {
@@ -170,24 +171,24 @@ int main(int argc, char **argv) {
         collisionShapes[j] = 0;
         delete shape;
       }
-  
+
     //delete dynamics world
     delete dynamicsWorld;
-  
+
     //delete solver
     delete solver;
-  
+
     //delete broadphase
     delete overlappingPairCache;
-  
+
     //delete dispatcher
     delete dispatcher;
-  
+
     delete collisionConfiguration;
-  
+
     //next line is optional: it will be cleared by the destructor when the array goes out of scope
     collisionShapes.clear();
-  
+
   std::cout << "Goodbye" << std::endl;
 
   return EXIT_SUCCESS;
