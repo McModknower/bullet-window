@@ -8,9 +8,19 @@
 // for debugging
 #include <iostream>
 
-BulletWindow BulletWindow::create(const char* title, const btCollisionWorld *world) {
+BulletWindow::BulletWindow(const char* title, btDynamicsWorld *world) :
+  Window(title),
+  m_cam(3.0,*this),
+  m_light_position(0, 0, 5),
+  m_world(world),
+  m_aspectRatio(1)
+{
+}
+
+void BulletWindow::display() {
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  BulletWindow window(title, 3.0, world);
+  Window::display();
+  m_aspectRatio = m_width / (GLfloat) m_height;
   // (gl:enable :light0 :lighting :color-material :blend)
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
@@ -29,19 +39,10 @@ BulletWindow BulletWindow::create(const char* title, const btCollisionWorld *wor
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // (gl:hint :perspective-correction-hint :nicest)))
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  return window;
-}
-
-BulletWindow::BulletWindow(const char* title, btScalar distance, const btCollisionWorld *world) :
-  Window(title),
-  m_cam(distance,*this),
-  m_light_position(0, 0, 5),
-  m_world(world)
-{
-  m_aspectRatio = m_width / (GLfloat) m_height;
 }
 
 void BulletWindow::tick() {
+  m_world->stepSimulation(1. / 60.);
   ticks++;
   postRedisplay();
 }

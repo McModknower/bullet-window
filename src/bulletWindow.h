@@ -6,7 +6,7 @@
 
 #include "camera.h"
 
-#include <bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h>
+#include <bullet/BulletDynamics/Dynamics/btDynamicsWorld.h>
 
 class BulletWindow : public Window
 {
@@ -21,15 +21,14 @@ class BulletWindow : public Window
 
   int ticks = 0;
   
-  const btCollisionWorld *m_world;
-
-  BulletWindow(const char* title, btScalar distance, const btCollisionWorld *world);
+  btDynamicsWorld *m_world;
 
  public:
   CameraMouseData m_cam;
 
-  static BulletWindow create(const char* title, const btCollisionWorld *world);
-  
+  BulletWindow(const char* title, btDynamicsWorld *world);
+
+  void display() override;
   void displayCallback() override;
   void reshapeCallback(int width, int height) override;
   void keyboardCallback(unsigned char key, int x, int y) override;

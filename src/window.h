@@ -20,6 +20,12 @@ public:
   int m_width;
 
   Window(const char* title);
+
+  /**
+   * Create the glut window, init m_window_id, m_height, m_width, and register callbacks.
+   * Subclasses that overwrite this method need to call this for the window to be actually displayed
+   */
+  virtual void display();
   
   virtual void displayCallback() {}
   virtual void reshapeCallback(int width, int height) {}

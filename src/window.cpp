@@ -17,6 +17,15 @@ inline unsigned int currentMillis() {
 Window::Window(const char* title)
   : m_window_id(0),
     m_tick_delay(-1)
+{}
+
+Window::~Window(){
+  if(m_window_id != 0) {
+    activeWindows.erase(m_window_id);
+  }
+}
+
+void Window::display(void)
 {
   m_window_id = glutCreateWindow("Lighthouse3D- GLUT Tutorial");
   m_height = glutGet(GLUT_WINDOW_HEIGHT);
@@ -32,11 +41,6 @@ Window::Window(const char* title)
 
   glutMouseFunc(&Window::staticMouseCallback);
   glutMotionFunc(&Window::staticMotionCallback);
-  
-}
-
-Window::~Window(){
-  activeWindows.erase(m_window_id);
 }
 
 void Window::postRedisplay() {
