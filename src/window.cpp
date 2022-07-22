@@ -63,6 +63,10 @@ void Window::close() {
   glutDestroyWindow(m_window_id);
 }
 
+bool Window::isDisplayed() {
+  return m_window_id != 0;
+}
+
 // static callbacks, since c++ doesn't like to use instance methods as callbacks for c functions.
 void Window::staticDisplayCallback() {
   activeWindows[glutGetWindow()]->displayCallback();

@@ -8,18 +8,16 @@
 
 #include "glut.h"
 
-#include "bulletWindow.h"
+#include "tickingBulletWindow.h"
 
 #include <bullet/btBulletDynamicsCommon.h>
 
 void threaded(btDiscreteDynamicsWorld *dynamicsWorld) {
   glutInitWindowPosition(100,100);
   glutInitWindowSize(320,320);
-  BulletWindow window("Bullet Visualization", dynamicsWorld);
+  TickingBulletWindow window("Bullet Visualization", dynamicsWorld);
 
   window.display();
-  //ca 60 fps
-  window.enableTick(1000/60);
   // enter GLUT event processing cycle
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 

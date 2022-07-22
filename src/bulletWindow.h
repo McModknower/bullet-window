@@ -19,11 +19,8 @@ class BulletWindow : public Window
   GLfloat m_green = 1;
   GLfloat m_blue = 1;
 
-  int ticks = 0;
-  
-  btDynamicsWorld *m_world;
-
  public:
+  btDynamicsWorld *m_world;
   CameraMouseData m_cam;
 
   BulletWindow(const char* title, btDynamicsWorld *world);
@@ -35,7 +32,6 @@ class BulletWindow : public Window
   void specialKeyCallback(int key, int x, int y) override;
   void mouseCallback(int button, int state, int x, int y) override;
   void motionCallback(int x, int y) override;
-  void tick() override;
 };
 
 #endif

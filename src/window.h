@@ -38,6 +38,7 @@ public:
   void postRedisplay();
   /**
    * Enables ticking and starts the timer.
+   * If enableTick is called while ticking is enabled, the new tick delay will be used starting after the next tick after the method gets called.
    */
   void enableTick(unsigned int tick_ms);
   /**
@@ -45,6 +46,8 @@ public:
    */
   void disableTick();
   void close();
+
+  bool isDisplayed();
 
   virtual ~Window();
 };

@@ -41,12 +41,6 @@ void BulletWindow::display() {
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
-void BulletWindow::tick() {
-  m_world->stepSimulation(1. / 60.);
-  ticks++;
-  postRedisplay();
-}
-
 void BulletWindow::reshapeCallback(int w, int h) {
   // Prevent a divide by zero, when window is too short
   // (you cant make a window of zero width).
@@ -156,7 +150,7 @@ void BulletWindow::displayCallback() {
   glVertex3f(1.0f,-1.0f,-1.0f);
   glVertex3f(1.0f,-1.0f, 1.0f);
   glVertex3f(1.0f, 1.0f, 1.0f);
-  glVertex3f(1.0f, ticks % 10,-1.0f);
+  glVertex3f(1.0f, 1.0f,-1.0f);
   glEnd();
 
   glColor3f(1-m_red,1-m_green,m_blue);
