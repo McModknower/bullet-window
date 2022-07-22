@@ -13,8 +13,23 @@ class TickingBulletWindow : public BulletWindow
   bool m_paused;
   // Stores the tick delay while playback is paused. 
   int m_tick_delay;
+  btScalar m_bullet_speed_multiplier;
  public:
   TickingBulletWindow(const char* title, btDynamicsWorld *world);
+
+  void setTickDelay(int millis);
+  int getTickDelay();
+
+  /**
+   * A Multiplier for how much faster than real time the bullet world should tick.
+   * The maximum value depends on the tick delay as follows:
+   * (tickDelay / 1000 ) * multiplier <= 1
+   * If you want to have more that 1 second per frame, change the second argument from stepSimulation to a higher number.
+   * WARNING: Setting this to very high values may result in no visual updates when one tick takes more milliseconds that the frameDelay. This is just an untested assumtion.
+   * Also setting this to negative values results in undefined behaviour.
+   */
+  void setBulletSpeedMultiplier(btScalar multiplier);
+  btScalar getBulletSpeedMultiplier();
 
   void display() override;
 

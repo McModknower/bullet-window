@@ -3,7 +3,8 @@
 TickingBulletWindow::TickingBulletWindow(const char* title, btDynamicsWorld *world) :
   BulletWindow(title, world),
   m_paused(true),
-  m_tick_delay(1000 / 60)
+  m_tick_delay(1000 / 60),
+  m_bullet_speed_multiplier(1)
 {
 }
 
@@ -17,11 +18,10 @@ void TickingBulletWindow::display() {
 void TickingBulletWindow::keyboardCallback(unsigned char key, int x, int y) {
   switch(key) {
   case 'p':
-    m_paused = !m_paused;
     if(m_paused) {
-      stop();
-    } else {
       start();
+    } else {
+      stop();
     }
     break;
   default:
@@ -30,16 +30,37 @@ void TickingBulletWindow::keyboardCallback(unsigned char key, int x, int y) {
 }
 
 void TickingBulletWindow::tick() {
+  // make sure that there is no more motion even in the last tick after ticking has been paused
   if(!m_paused) {
-    m_world->stepSimulation(1. / 60.);
+    m_world->stepSimulation((m_tick_delay / 1000.) * m_bullet_speed_multiplier, 60);
     postRedisplay();
   }
 }
 
 void TickingBulletWindow::start() {
-  enableTick(m_tick_delay);
+  int delay = m_tick_delay;
+  m_paused = delay < 0;
+  enableTick(delay);
 }
 
 void TickingBulletWindow::stop() {
+  m_paused = true;
   disableTick();
+}
+
+void TickingBulletWindow::setTickDelay(int millis) {
+  m_tick_delay = millis;
+  start();
+}
+
+int TickingBulletWindow::getTickDelay() {
+  return m_tick_delay;
+}
+
+void TickingBulletWindow::setBulletSpeedMultiplier(btScalar multiplier) {
+  m_bullet_speed_multiplier = multiplier;
+}
+
+btScalar TickingBulletWindow::getBulletSpeedMultiplier() {
+  return m_bullet_speed_multiplier;
 }

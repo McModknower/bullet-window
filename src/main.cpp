@@ -17,6 +17,7 @@ void threaded(btDiscreteDynamicsWorld *dynamicsWorld) {
   glutInitWindowSize(320,320);
   TickingBulletWindow window("Bullet Visualization", dynamicsWorld);
 
+  window.setBulletSpeedMultiplier(0.1);
   window.display();
   // enter GLUT event processing cycle
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
@@ -28,6 +29,8 @@ void threaded(btDiscreteDynamicsWorld *dynamicsWorld) {
 
   glutInitWindowPosition(100,100);
   glutInitWindowSize(320,320);
+
+  window.setBulletSpeedMultiplier(10);
 
   window.display();
   // enter GLUT event processing cycle
