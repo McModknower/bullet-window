@@ -11,6 +11,7 @@ private:
   static void staticMouseCallback(int button, int state, int x, int y);
   static void staticMotionCallback(int x, int y);
   static void staticTick(int windowID);
+  static void staticCloseCallback();
   // at what millis the next tick should be done.
   unsigned int m_next_tick_at;
   int m_tick_delay;
@@ -33,6 +34,7 @@ public:
   virtual void specialKeyCallback(int key, int x, int y) {}
   virtual void mouseCallback(int button, int state, int x, int y) {}
   virtual void motionCallback(int x, int y) {}
+  virtual void closeCallback() {}
   virtual void tick() {}
 
   void postRedisplay();

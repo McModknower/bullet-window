@@ -41,6 +41,7 @@ void Window::display(void)
 
   glutMouseFunc(&Window::staticMouseCallback);
   glutMotionFunc(&Window::staticMotionCallback);
+  glutCloseFunc(&Window::staticCloseCallback);
 }
 
 void Window::postRedisplay() {
@@ -94,6 +95,16 @@ void Window::staticMouseCallback(int button, int state, int x, int y) {
 void Window::staticMotionCallback(int x, int y) {
   activeWindows[glutGetWindow()]->motionCallback(x, y);
 }
+
+void Window::staticCloseCallback() {
+  int winID = glutGetWindow();
+  Window *w = activeWindows[winID];
+  w->closeCallback();
+  activeWindows.erase(winID);
+  w->m_window_id = 0;
+  w->m_tick_delay = -1;
+}
+
 
 void Window::staticTick(int windowID) {
   Window *w = activeWindows[windowID];
