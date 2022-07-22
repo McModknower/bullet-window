@@ -5,7 +5,7 @@ To do list
 - [x] step the bullet world each tick
 - [x] Fix Rotating the camera
 - [x] add a bulletSpeedMuliplier that makes the bullet world advance bulletSpeedMuliplier seconds for each real second
-- [ ] Render STATIC_PLANE_PROXYTYPE
+- [x] Render STATIC_PLANE_PROXYTYPE
 - [ ] Integrate this library code (everything except main.cpp) into another application. This will be done in https://github.com/McModknower/knowrob/tree/bullet_integration.
 - [ ] Render CYLINDER_SHAPE_PROXYTYPE
 - [ ] Render CONE_SHAPE_PROXYTYPE

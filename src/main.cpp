@@ -127,6 +127,16 @@ int main(int argc, char **argv) {
 
       dynamicsWorld->addRigidBody(body);
     }
+    {
+      //create a ground plane
+      btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 0, 1), 0);
+      btTransform startTransform;
+      startTransform.setIdentity();
+      btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+      btRigidBody::btRigidBodyConstructionInfo rbInfo(0, myMotionState, colShape);
+      btRigidBody* body = new btRigidBody(rbInfo);
+      dynamicsWorld->addRigidBody(body);
+    }
 
   // init GLUT and create Window
   glutInit(&argc, argv);
