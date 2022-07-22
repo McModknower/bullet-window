@@ -22,6 +22,19 @@ void threaded(btDiscreteDynamicsWorld *dynamicsWorld) {
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
   glutMainLoop();
+  // after glutMainLoop, glut needs to be reinitialized
+  int i = 0;
+  glutInit(&i, nullptr);
+
+  glutInitWindowPosition(100,100);
+  glutInitWindowSize(320,320);
+
+  window.display();
+  // enter GLUT event processing cycle
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+
+  glutMainLoop();
+
 }
 
 int main(int argc, char **argv) {

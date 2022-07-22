@@ -16,6 +16,8 @@ class TickingBulletWindow : public BulletWindow
  public:
   TickingBulletWindow(const char* title, btDynamicsWorld *world);
 
+  void display() override;
+
   void keyboardCallback(unsigned char key, int x, int y) override;
   void tick() override;
 

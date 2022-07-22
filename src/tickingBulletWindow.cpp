@@ -7,16 +7,21 @@ TickingBulletWindow::TickingBulletWindow(const char* title, btDynamicsWorld *wor
 {
 }
 
+void TickingBulletWindow::display() {
+  BulletWindow::display();
+  if(!m_paused) {
+    start();
+  }
+}
+
 void TickingBulletWindow::keyboardCallback(unsigned char key, int x, int y) {
   switch(key) {
   case 'p':
     m_paused = !m_paused;
-    if(isDisplayed()) {
-      if(m_paused) {
-	stop();
-      } else {
-	start();
-      }
+    if(m_paused) {
+      stop();
+    } else {
+      start();
     }
     break;
   default:
